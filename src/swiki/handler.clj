@@ -1,27 +1,22 @@
 (ns swiki.handler
   (:use compojure.core)
-  (:use [hiccup core page])
   (:use ring.middleware.reload)
   (:use ring.middleware.stacktrace)
+  (:use swiki.middleware)
+  (:use swiki.views)
   (:require [compojure.handler :as handler]
             [compojure.route :as route]))
 
-(defn view-layout [title & content]
-  (html5
-    [:head
-      [:title title]
-      (include-css "/css/default.css")]
-    [:body content]))
-   
-(defn hello-page []
-  (view-layout "swiki" [:h1 "Hello, world!"]))
-
 (defroutes app-routes
   (GET "/" [] (hello-page))
+  (GET "/login" [] (login-page))
+  (POST "/login" [username password] (login username password))
+  (GET "/logout" [] (logout))
   (route/resources "/")
   (route/not-found "Not Found"))
 
 (def app
   (-> (handler/site app-routes)
+      (wrap-request-logging)
       (wrap-reload `[swiki.handler])
       (wrap-stacktrace)))
