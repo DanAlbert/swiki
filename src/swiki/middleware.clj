@@ -1,6 +1,6 @@
 (ns swiki.middleware)
 
-(defn- log [msg & vals]
+(defn log [msg & vals]
   (let [line (apply format msg vals)]
     (locking System/out (println line))))
 

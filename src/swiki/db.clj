@@ -5,4 +5,4 @@
   (sqlite3 {:db "swiki.db"}))
 
 (defentity users
-  (entity-fields :username :password))
+  (entity-fields :id :username :password))
